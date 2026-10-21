@@ -1,0 +1,132 @@
+/* 全局样式 —— 自定义视觉（Element Plus 之上的品牌化样式） */
+
+:root {
+  --brand: #1e3a5f;
+  --brand-2: #4a5fd0;
+  --accent: #2b5cae;
+  --bg: #f4f7fb;
+  --text: #1e3a5f;
+  --muted: #7c8aa0;
+  --card-border: #eef1f7;
+  --shadow: 0 4px 18px rgba(30, 58, 95, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+}
+
+#app {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 1.2rem 1.5rem 3rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--card-border);
+  margin-bottom: 16px;
+}
+
+.card h3 {
+  margin: 0 0 14px;
+  color: var(--brand);
+  font-size: 1.1rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.tag {
+  display: inline-block;
+  background: #eef4ff;
+  color: var(--accent);
+  border-radius: 8px;
+  padding: 3px 11px;
+  font-size: 0.82rem;
+  margin: 2px 5px 2px 0;
+}
+
+.tag-green {
+  background: #e8f7ef;
+  color: #1a7f4b;
+}
+
+.tag-warn {
+  background: #fff4e6;
+  color: #c46a08;
+}
+
+.metric-row {
+  display: flex;
+  gap: 12px;
+  margin: 8px 0;
+  flex-wrap: wrap;
+}
+
+.metric {
+  flex: 1 1 200px;
+  background: #f7f9fd;
+  border-radius: 14px;
+  padding: 15px 18px;
+  border: 1px solid var(--card-border);
+}
+
+.metric .label {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.metric .value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-top: 3px;
+}
+
+.metric .delta {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #f0f3f8;
+  padding: 9px 0;
+}
+
+.row-between:last-child {
+  border-bottom: none;
+}
+
+.stars {
+  color: #f5b301;
+  letter-spacing: 1px;
+}
+
+.stars .gray {
+  color: #dfe4ec;
+}
+
+.footer {
+  text-align: center;
+  color: #a8b4c6;
+  font-size: 0.8rem;
+  margin-top: 22px;
+}
