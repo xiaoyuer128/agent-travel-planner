@@ -24,7 +24,7 @@ class Turn(BaseModel):
     message: str = Field(min_length=1, max_length=2000)
     revision: int = Field(ge=0)
     patch: Preferences | None = None
-    action: Literal["auto", "hotel_cheaper", "hotel_better", "activity"] = "auto"
+    action: Literal["auto", "hotel_cheaper", "hotel_better", "activity", "validate"] = "auto"
     generate: bool = True
 
 

@@ -32,7 +32,7 @@ def test_collect_then_plan(client):
     assert '目的地' in s['messages'][-1]['content']
     s = turn(client, s, '去杭州，2026-12-01出发，玩5天')
     assert s['plan']['preferences']['departure_city'] == '重庆'
-    assert s['trace'] == ['understand','collect','retrieve','plan','respond']
+    assert s['trace'] == ['understand','collect','retrieve','plan','validate','respond']
     assert len(s['plan']['days']) == 5
     assert s['plan']['cost']['nights'] == 4
 

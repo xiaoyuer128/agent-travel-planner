@@ -11,6 +11,7 @@ from chat.api import get_session,store
 from chat.store import Conflict
 from api.discover import spots
 from domestic import PLACES,GUIDES
+from copy import deepcopy
 
 router=APIRouter(prefix='/api',tags=['行程管理'])
 _maps={}
@@ -18,6 +19,21 @@ _maps={}
 class Rename(BaseModel):
     title:str=Field(min_length=1,max_length=60)
     revision:int=Field(ge=0)
+
+class ApplyRepair(BaseModel):revision:int=Field(ge=0)
+
+@router.post('/chat/sessions/{sid}/apply-repair')
+def apply_repair(sid:str,data:ApplyRepair,who=Depends(identity)):
+    session=get_session(sid,who);plan=session.get('plan')
+    proposal=(plan or {}).get('repair_proposal')
+    if not proposal or proposal.get('base_version')!=plan['version']:raise HTTPException(409,'当前版本没有可应用的调整建议')
+    if data.revision!=session['revision']:raise HTTPException(409,'会话已更新，请刷新后重试')
+    updated=deepcopy(plan);updated['days']=deepcopy(proposal['days']);updated['feasibility']=deepcopy(proposal['feasibility'])
+    updated.pop('repair_proposal',None);updated['changed_sections']=['days','feasibility'];updated['version']=len(session['versions'])+1
+    session['plan']=updated;session['versions'].append(deepcopy(updated))
+    session['messages'].append({'role':'assistant','content':'已按你的确认应用路线调整，保存为新版本；待核实信息仍需出行前确认。'})
+    try:return store(who).save(session,data.revision)
+    except Conflict as exc:raise HTTPException(409,str(exc))
 
 @router.patch('/chat/sessions/{sid}')
 def rename(sid:str,data:Rename,who=Depends(identity)):

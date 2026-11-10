@@ -29,7 +29,7 @@ def test_casual_chat_does_not_require_trip_fields(monkeypatch):
         value=r.json()
         assert not value['plan'] and not value['versions']
         assert '还需要' not in value['messages'][-1]['content']
-        assert value['trace']==['retrieve_knowledge','chat']
+        assert value['trace']==['retrieve_knowledge','tools','chat']
 
 def test_casual_answer_uses_imported_knowledge(monkeypatch):
     did=ingest('泉州开元寺步行','泉州','文旅参考','https://example.com/qz','泉州开元寺与西街可以结合步行探索，预留休息时间，不要安排过密。')

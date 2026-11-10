@@ -7,8 +7,8 @@ def data_dir():
     return Path(os.getenv('CHAT_DB_PATH',str(Path(__file__).resolve().parents[1]/'data/chat.sqlite3'))).parent
 
 @contextmanager
-def database():
-    path=Path(os.getenv('CHAT_DB_PATH',str(data_dir()/'chat.sqlite3')))
+def database(path=None):
+    path=Path(path or os.getenv('CHAT_DB_PATH',str(data_dir()/'chat.sqlite3')))
     path.parent.mkdir(parents=True,exist_ok=True)
     conn=sqlite3.connect(path,timeout=15)
     conn.row_factory=sqlite3.Row
@@ -17,8 +17,8 @@ def database():
         with conn: yield conn
     finally: conn.close()
 
-def init_db():
-    with database() as db:
+def init_db(path=None):
+    with database(path) as db:
         db.executescript('''
         CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email TEXT UNIQUE NOT NULL,name TEXT NOT NULL,password TEXT NOT NULL,profile TEXT NOT NULL DEFAULT '{}',created REAL NOT NULL);
         CREATE TABLE IF NOT EXISTS auth_tokens(token TEXT PRIMARY KEY,user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,expires REAL NOT NULL);

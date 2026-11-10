@@ -25,9 +25,9 @@ from api.knowledge import router as knowledge_router
 import os
 
 app = FastAPI(
-    title="多Agent智能旅游行程规划系统",
-    description="6-Agent Pipeline + 并行搜索 + 预算循环",
-    version="1.0.0",
+    title="山与行 · 旅行规划 Agent 平台",
+    description="单主 Agent 工具调用 + LangGraph 规划校验工作流 + RAG",
+    version="2.0.0",
 )
 
 app.add_middleware(
@@ -86,7 +86,7 @@ class PlanSummary(BaseModel):
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "service": "travel-planner", "agents": 6}
+    return {"status": "ok", "service": "travel-planner", "architecture": "tool-using-agent-with-langgraph-workflow"}
 
 
 @app.post("/api/plan", response_model=PlanSummary)

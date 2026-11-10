@@ -1,0 +1,394 @@
+{
+  "version": "travel-rag-regression-v1",
+  "description": "人工合成的固定检索回归集；development 为显式景点问题，regression 为主题改写问题，negative 为无资料问题。不是独立真实用户泛化评测。",
+  "cases": [
+    {
+      "id": "dev-01",
+      "split": "development",
+      "query": "西湖怎么逛",
+      "city": "杭州",
+      "relevant_doc_ids": [
+        "cn-0-0"
+      ]
+    },
+    {
+      "id": "test-01",
+      "split": "regression",
+      "query": "想在湖边慢慢散步",
+      "city": "杭州",
+      "relevant_doc_ids": [
+        "cn-0-0"
+      ]
+    },
+    {
+      "id": "dev-02",
+      "split": "development",
+      "query": "栖霞山怎么逛",
+      "city": "南京",
+      "relevant_doc_ids": [
+        "cn-1-0"
+      ]
+    },
+    {
+      "id": "test-02",
+      "split": "regression",
+      "query": "想逛秦淮边的人文街区",
+      "city": "南京",
+      "relevant_doc_ids": [
+        "cn-1-1"
+      ]
+    },
+    {
+      "id": "dev-03",
+      "split": "development",
+      "query": "颐和园怎么逛",
+      "city": "北京",
+      "relevant_doc_ids": [
+        "cn-2-0"
+      ]
+    },
+    {
+      "id": "test-03",
+      "split": "regression",
+      "query": "秋天想去山林里走走",
+      "city": "北京",
+      "relevant_doc_ids": [
+        "cn-2-1"
+      ]
+    },
+    {
+      "id": "dev-04",
+      "split": "development",
+      "query": "大雁塔怎么逛",
+      "city": "西安",
+      "relevant_doc_ids": [
+        "cn-3-0"
+      ]
+    },
+    {
+      "id": "test-04",
+      "split": "regression",
+      "query": "想在古城里散步",
+      "city": "西安",
+      "relevant_doc_ids": [
+        "cn-3-1"
+      ]
+    },
+    {
+      "id": "dev-05",
+      "split": "development",
+      "query": "人民公园怎么逛",
+      "city": "成都",
+      "relevant_doc_ids": [
+        "cn-4-0"
+      ]
+    },
+    {
+      "id": "test-05",
+      "split": "regression",
+      "query": "逛吃适合去哪里",
+      "city": "成都",
+      "relevant_doc_ids": [
+        "cn-4-1"
+      ]
+    },
+    {
+      "id": "dev-06",
+      "split": "development",
+      "query": "洪崖洞怎么逛",
+      "city": "重庆",
+      "relevant_doc_ids": [
+        "cn-5-0"
+      ]
+    },
+    {
+      "id": "test-06",
+      "split": "regression",
+      "query": "想在市中心街区走走",
+      "city": "重庆",
+      "relevant_doc_ids": [
+        "cn-5-1"
+      ]
+    },
+    {
+      "id": "dev-07",
+      "split": "development",
+      "query": "外滩怎么逛",
+      "city": "上海",
+      "relevant_doc_ids": [
+        "cn-6-0"
+      ]
+    },
+    {
+      "id": "test-07",
+      "split": "regression",
+      "query": "想看传统园林和文化",
+      "city": "上海",
+      "relevant_doc_ids": [
+        "cn-6-1"
+      ]
+    },
+    {
+      "id": "dev-08",
+      "split": "development",
+      "query": "亚龙湾怎么逛",
+      "city": "三亚",
+      "relevant_doc_ids": [
+        "cn-7-0"
+      ]
+    },
+    {
+      "id": "test-08",
+      "split": "regression",
+      "query": "想看看山海风景",
+      "city": "三亚",
+      "relevant_doc_ids": [
+        "cn-7-1"
+      ]
+    },
+    {
+      "id": "dev-09",
+      "split": "development",
+      "query": "鼓浪屿怎么逛",
+      "city": "厦门",
+      "relevant_doc_ids": [
+        "cn-8-0"
+      ]
+    },
+    {
+      "id": "test-09",
+      "split": "regression",
+      "query": "想逛园林看看植物",
+      "city": "厦门",
+      "relevant_doc_ids": [
+        "cn-8-1"
+      ]
+    },
+    {
+      "id": "dev-10",
+      "split": "development",
+      "query": "拙政园怎么逛",
+      "city": "苏州",
+      "relevant_doc_ids": [
+        "cn-9-0"
+      ]
+    },
+    {
+      "id": "test-10",
+      "split": "regression",
+      "query": "古城里适合慢慢走的街区",
+      "city": "苏州",
+      "relevant_doc_ids": [
+        "cn-9-1"
+      ]
+    },
+    {
+      "id": "dev-11",
+      "split": "development",
+      "query": "栈桥怎么逛",
+      "city": "青岛",
+      "relevant_doc_ids": [
+        "cn-10-0"
+      ]
+    },
+    {
+      "id": "test-11",
+      "split": "regression",
+      "query": "想逛城市里的老建筑",
+      "city": "青岛",
+      "relevant_doc_ids": [
+        "cn-10-1"
+      ]
+    },
+    {
+      "id": "dev-12",
+      "split": "development",
+      "query": "翠湖公园怎么逛",
+      "city": "昆明",
+      "relevant_doc_ids": [
+        "cn-11-0"
+      ]
+    },
+    {
+      "id": "test-12",
+      "split": "regression",
+      "query": "想在湖边放松",
+      "city": "昆明",
+      "relevant_doc_ids": [
+        "cn-11-1"
+      ]
+    },
+    {
+      "id": "dev-13",
+      "split": "development",
+      "query": "洱海怎么逛",
+      "city": "大理",
+      "relevant_doc_ids": [
+        "cn-12-0"
+      ]
+    },
+    {
+      "id": "test-13",
+      "split": "regression",
+      "query": "想看古建筑和人文街区",
+      "city": "大理",
+      "relevant_doc_ids": [
+        "cn-12-1"
+      ]
+    },
+    {
+      "id": "dev-14",
+      "split": "development",
+      "query": "丽江古城怎么逛",
+      "city": "丽江",
+      "relevant_doc_ids": [
+        "cn-13-0"
+      ]
+    },
+    {
+      "id": "test-14",
+      "split": "regression",
+      "query": "想看山水风景",
+      "city": "丽江",
+      "relevant_doc_ids": [
+        "cn-13-1"
+      ]
+    },
+    {
+      "id": "dev-15",
+      "split": "development",
+      "query": "象鼻山怎么逛",
+      "city": "桂林",
+      "relevant_doc_ids": [
+        "cn-14-0"
+      ]
+    },
+    {
+      "id": "test-15",
+      "split": "regression",
+      "query": "想在湖边慢慢逛",
+      "city": "桂林",
+      "relevant_doc_ids": [
+        "cn-14-1"
+      ]
+    },
+    {
+      "id": "dev-16",
+      "split": "development",
+      "query": "岳麓山怎么逛",
+      "city": "长沙",
+      "relevant_doc_ids": [
+        "cn-15-0"
+      ]
+    },
+    {
+      "id": "test-16",
+      "split": "regression",
+      "query": "想在城市里散步",
+      "city": "长沙",
+      "relevant_doc_ids": [
+        "cn-15-1"
+      ]
+    },
+    {
+      "id": "dev-17",
+      "split": "development",
+      "query": "龙门石窟怎么逛",
+      "city": "洛阳",
+      "relevant_doc_ids": [
+        "cn-16-0"
+      ]
+    },
+    {
+      "id": "test-17",
+      "split": "regression",
+      "query": "想逛古建筑和古城",
+      "city": "洛阳",
+      "relevant_doc_ids": [
+        "cn-16-1"
+      ]
+    },
+    {
+      "id": "dev-18",
+      "split": "development",
+      "query": "黄山风景区怎么逛",
+      "city": "黄山",
+      "relevant_doc_ids": [
+        "cn-17-0"
+      ]
+    },
+    {
+      "id": "test-18",
+      "split": "regression",
+      "query": "想逛人文街区",
+      "city": "黄山",
+      "relevant_doc_ids": [
+        "cn-17-1"
+      ]
+    },
+    {
+      "id": "dev-19",
+      "split": "development",
+      "query": "中央大街怎么逛",
+      "city": "哈尔滨",
+      "relevant_doc_ids": [
+        "cn-18-0"
+      ]
+    },
+    {
+      "id": "test-19",
+      "split": "regression",
+      "query": "想去自然景点休闲",
+      "city": "哈尔滨",
+      "relevant_doc_ids": [
+        "cn-18-1"
+      ]
+    },
+    {
+      "id": "dev-20",
+      "split": "development",
+      "query": "张家界国家森林公园怎么逛",
+      "city": "张家界",
+      "relevant_doc_ids": [
+        "cn-19-0"
+      ]
+    },
+    {
+      "id": "test-20",
+      "split": "regression",
+      "query": "想看山地风景",
+      "city": "张家界",
+      "relevant_doc_ids": [
+        "cn-19-1"
+      ]
+    },
+    {
+      "id": "negative-1",
+      "split": "negative",
+      "query": "量子纠缠实验参数",
+      "city": "",
+      "relevant_doc_ids": []
+    },
+    {
+      "id": "negative-2",
+      "split": "negative",
+      "query": "火星签证政策",
+      "city": "",
+      "relevant_doc_ids": []
+    },
+    {
+      "id": "negative-3",
+      "split": "negative",
+      "query": "abcdefzzzz999",
+      "city": "",
+      "relevant_doc_ids": []
+    },
+    {
+      "id": "negative-4",
+      "split": "negative",
+      "query": "海王星住宿预订",
+      "city": "",
+      "relevant_doc_ids": []
+    }
+  ]
+}

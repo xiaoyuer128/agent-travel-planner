@@ -8,6 +8,7 @@ os.environ['LLM_PROVIDER']='mock'
 os.environ['RAG_EMBEDDING']='mock'
 os.environ['RAG_STORE']='memory'
 os.environ['LANGSMITH_TRACING']='false'
+os.environ['AMAP_API_KEY']=''
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 
 @pytest.fixture(autouse=True)
