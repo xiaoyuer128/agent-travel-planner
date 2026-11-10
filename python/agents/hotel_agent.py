@@ -67,7 +67,7 @@ class HotelAgent(BaseAgent):
         prompt = (
             f"为 {dest.city} 搜索酒店，旅行风格 {pref.travel_style.value}，入住 {nights} 晚。\n"
             "严格输出如下 JSON（无多余字段）：\n"
-            '{"hotels":[{"name":"东京精品酒店","city":"东京","address":"市中心","star_rating":4.0,'
+            '{"hotels":[{"name":"杭州精品酒店","city":"杭州","address":"市中心","star_rating":4.0,'
             '"user_rating":8.8,"price_per_night":500,"amenities":["WiFi","早餐"],'
             '"distance_to_center_km":1.0}]}'
         )

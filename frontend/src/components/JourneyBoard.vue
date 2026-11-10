@@ -1,0 +1,53 @@
+<script setup lang="ts">
+import {computed,ref,watch} from 'vue';
+import {api} from '../api/platform';
+import type {Session} from '../types/chat';
+const props=defineProps<{session:Session;busy:boolean;readonly?:boolean}>();
+const emit=defineEmits<{send:[text:string];restore:[version:number];error:[message:string];share:[]}>();
+const mapImageFailed=ref(false);
+const version=ref(0);const day=ref(1);const tab=ref('route');
+const plan=computed(()=>version.value?props.session.versions.find(v=>v.version===version.value)||props.session.plan:props.session.plan);
+const money=(n:number)=>'¥'+(n/100).toLocaleString('zh-CN',{maximumFractionDigits:2});
+const map=ref<{points:{name:string;lng:number;lat:number;url:string}[];route_url?:string;note:string}>();
+const checklist=ref<{text:string;done:boolean}[]>([]);
+const comparison=ref<{cost_delta_cents:number;changes:{section:string;before:unknown;after:unknown}[]}>();
+const compareA=ref(1);const compareB=ref(1);const auxiliaryBusy=ref(false);
+watch(()=>props.session.plan?.version,()=>{version.value=0;map.value=undefined;comparison.value=undefined;compareB.value=props.session.plan?.version||1});
+async function loadMap(){if(props.readonly)return;mapImageFailed.value=false;auxiliaryBusy.value=true;try{map.value=await api(`/chat/sessions/${props.session.id}/map?day=${day.value}`)}catch(e){emit('error',String(e))}finally{auxiliaryBusy.value=false}}
+async function loadList(){try{checklist.value=await api(`/chat/sessions/${props.session.id}/checklist`)}catch(e){emit('error',String(e))}}
+async function changeTab(value:string){tab.value=value;if(value==='map')await loadMap();if(value==='list')await loadList()}
+async function saveList(){try{await api(`/chat/sessions/${props.session.id}/checklist`,'PUT',{items:checklist.value})}catch(e){emit('error',String(e))}}
+async function compare(){try{comparison.value=await api(`/chat/sessions/${props.session.id}/compare?a=${compareA.value}&b=${compareB.value}`)}catch(e){emit('error',String(e))}}
+const points=computed(()=>{const p=map.value?.points||[];if(!p.length)return[];const xs=p.map(x=>x.lng),ys=p.map(x=>x.lat);const dx=Math.max(...xs)-Math.min(...xs)||0.01,dy=Math.max(...ys)-Math.min(...ys)||0.01;return p.map(x=>({...x,x:60+(x.lng-Math.min(...xs))/dx*480,y:220-(x.lat-Math.min(...ys))/dy*160}))});
+function downloadImage(){
+ if(!plan.value)return;const p=plan.value;const canvas=document.createElement('canvas');canvas.width=1080;
+ let c=canvas.getContext('2d')!;
+ const wrap=(text:string,font:string)=>{c.font=font;const lines:string[]=[];let line='';for(const char of text){if(c.measureText(line+char).width>950){lines.push(line);line=char}else line+=char}if(line)lines.push(line);return lines};
+ const rows=p.days.map(d=>({titles:wrap(`DAY ${d.day}  ${d.title}`,'bold 30px sans-serif'),body:wrap(d.description,'24px sans-serif')}));
+ canvas.height=320+rows.reduce((n,r)=>n+r.titles.length*42+r.body.length*36+65,0);
+ c=canvas.getContext('2d')!;c.fillStyle='#faf8f1';c.fillRect(0,0,canvas.width,canvas.height);c.fillStyle='#234f43';c.font='bold 48px sans-serif';c.fillText(`${p.preferences.destination} · ${p.preferences.days}日旅行`,60,90);c.font='26px sans-serif';c.fillText(`${p.preferences.start_date} / ${p.preferences.num_travelers}人 / 示例费用 ${money(p.cost.total_cents)}`,60,145);
+ let y=230;for(const row of rows){c.font='bold 30px sans-serif';for(const line of row.titles){c.fillText(line,60,y);y+=42}c.font='24px sans-serif';for(const line of row.body){c.fillText(line,60,y);y+=36}y+=65}
+ c.font='20px sans-serif';c.fillText('航班、酒店与费用为示例；来源见网站方案。',60,canvas.height-40);const a=document.createElement('a');a.download=`${p.preferences.destination}旅行方案.png`;a.href=canvas.toDataURL('image/png');a.click()
+}
+</script>
+<template>
+ <section class="journey-board">
+  <div v-if="!plan" class="empty-state"><span class="large-symbol">↗</span><h2>让期待，有迹可循</h2><p>与旅行助手确认需求后，完整方案将在这里展开。</p></div>
+  <template v-else>
+   <header class="board-head"><div><span class="small-label">YOUR NEXT JOURNEY · V{{plan.version}}</span><h1>{{plan.preferences.destination}}，慢慢出发</h1><p>{{plan.preferences.departure_city}}出发 · {{plan.preferences.start_date}} · {{plan.preferences.days}}天 · {{plan.preferences.num_travelers}}人</p></div><div class="board-total">{{money(plan.cost.total_cents)}}<small>示例总费用</small></div></header>
+   <div v-if="!readonly" class="board-toolbar"><select v-model="version" aria-label="方案版本"><option :value="0">当前版本</option><option v-for="v in session.versions" :value="v.version">历史 v{{v.version}}</option></select><button v-if="version&&version!==session.plan?.version" :disabled="busy" @click="emit('restore',version)">恢复此版本</button><button @click="emit('share')">分享</button><a :href="'/api/chat/sessions/'+session.id+'/export'" target="_blank">导出 PDF</a><button @click="downloadImage">保存长图</button></div>
+   <div class="board-tabs"><button v-for="item in (readonly?['route']:['route','map','compare','list'])" :class="{active:tab===item}" @click="changeTab(item)">{{({route:'每日路线',map:'地点与地图',compare:'版本比较',list:'出行清单'} as Record<string,string>)[item]}}</button></div>
+   <div class="board-content">
+    <template v-if="tab==='route'">
+     <div class="budget-note" :class="{over:!plan.cost.within_budget}">{{plan.cost.within_budget?'✓ 预算范围内':'当前方案超预算'}} · 预算 {{money(plan.cost.budget_cents)}}<span>交通 {{money(plan.cost.flight_cents)}} / 住宿 {{money(plan.cost.hotel_cents)}} / 活动 {{money(plan.cost.activity_cents)}}</span></div>
+     <article class="itinerary-day" v-for="d in plan.days" :key="d.day"><div class="day-badge">{{String(d.day).padStart(2,'0')}}</div><div><small>{{d.date}}</small><h3>{{d.title}}</h3><p>{{d.description}}</p><a v-for="id in d.source_ids" :href="'#cite-'+id" class="citation">{{plan.sources.find(s=>s.id===id)?.title||id}} ↗</a><button v-if="!readonly" class="text-button" :disabled="busy" @click="emit('send',`只修改第${d.day}天，安排得轻松一点，其他天不变`)">这天轻松一点</button></div></article>
+     <div class="stay-summary"><span class="small-label">STAY / 示例住宿</span><h3>{{plan.hotel.name}}</h3><p>{{money(plan.hotel.price_cents)}} / 房 / 晚 · {{plan.cost.rooms}}间 · {{plan.cost.nights}}晚</p><button v-if="!readonly" :disabled="busy" @click="emit('send','酒店换便宜一些，其他不变')">换便宜一些</button></div>
+     <details class="references"><summary>查看 {{plan.sources.length}} 条攻略来源与费用说明</summary><div v-for="source in plan.sources" :id="'cite-'+source.id"><b>{{source.title}}</b><p>{{source.text}}</p><small>{{source.source}}</small></div><p v-for="warning in plan.warnings">{{warning}}</p></details>
+    </template>
+    <template v-if="tab==='map'"><div class="inline-row"><label>查看路线 <select v-model="day" @change="loadMap"><option v-for="d in session.plan?.days" :value="d.day">第{{d.day}}天</option></select></label><span v-if="auxiliaryBusy">正在获取地点…</span></div><div class="route-map"><img v-if="map?.points.length&&!mapImageFailed" :src="`/api/chat/sessions/${session.id}/map-image?day=${day}`" alt="高德地图：当天景点位置" @error="mapImageFailed=true"/><svg v-else viewBox="0 0 600 280" role="img" aria-label="高德坐标位置示意图"><defs><pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M 30 0 L 0 0 0 30" fill="none" stroke="#cfddd4" stroke-width=".7"/></pattern></defs><rect width="600" height="280" fill="url(#grid)"/><polyline :points="points.map(p=>`${p.x},${p.y}`).join(' ')" fill="none" stroke="#52765b" stroke-width="3" stroke-dasharray="7 5"/><g v-for="(p,i) in points"><circle :cx="p.x" :cy="p.y" r="13" fill="#265442"/><text :x="p.x" :y="p.y+5" fill="white" text-anchor="middle" font-size="13">{{i+1}}</text><text :x="p.x" :y="p.y-22" text-anchor="middle" font-size="13" fill="#234c40">{{p.name}}</text></g></svg><p v-if="!auxiliaryBusy&&!points.length">暂无可匹配的地点坐标，可在下方高德入口搜索。</p></div><a v-for="p in map?.points" :href="p.url" target="_blank" rel="noopener" class="map-place">⌖ {{p.name}} · 高德地图 ↗</a><a v-if="map?.route_url" class="primary link-button" :href="map.route_url" target="_blank" rel="noopener">打开高德步行导航</a><p class="muted">{{map?.note}}</p></template>
+    <template v-if="tab==='compare'"><div class="inline-row"><select v-model="compareA" aria-label="比较旧版本"><option v-for="v in session.versions" :value="v.version">v{{v.version}}</option></select><span>→</span><select v-model="compareB" aria-label="比较新版本"><option v-for="v in session.versions" :value="v.version">v{{v.version}}</option></select><button class="primary" @click="compare">比较版本</button></div><div v-if="comparison"><h3>示例费用变化 {{money(comparison.cost_delta_cents)}}</h3><p v-if="!comparison.changes.length">这两个版本的主要内容相同。</p><details v-for="change in comparison.changes" class="comparison"><summary>{{({preferences:'旅行需求',hotel:'住宿',days:'每日安排',flights:'交通'} as Record<string,string>)[change.section]}}已变更</summary><div class="compare-columns"><pre>{{JSON.stringify(change.before,null,2)}}</pre><pre>{{JSON.stringify(change.after,null,2)}}</pre></div></details></div><p v-else class="muted">选择两个版本，查看需求、行程与住宿的具体变化。</p></template>
+    <template v-if="tab==='list'"><h3>出发前，逐项确认</h3><p class="muted">根据当前偏好整理，可勾选保存。</p><label v-for="(item,i) in checklist" class="checklist-item"><input type="checkbox" v-model="item.done" @change="saveList"/><span :class="{checked:item.done}">{{item.text}}</span><button class="text-button" aria-label="移除清单项" @click="checklist.splice(i,1);saveList()">×</button></label><button @click="checklist.push({text:'补充出行事项',done:false});saveList()">＋ 添加事项</button><input v-for="item in checklist.filter(i=>i.text==='补充出行事项')" v-model="item.text" aria-label="自定义事项" @change="saveList"/></template>
+   </div>
+  </template>
+ </section>
+</template>

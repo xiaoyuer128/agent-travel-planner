@@ -19,20 +19,15 @@ AIRLINES = {
         ("海南航空", "HU"), ("春秋航空", "9C"), ("吉祥航空", "HO"),
         ("深圳航空", "ZH"), ("厦门航空", "MF"),
     ],
-    "国际": [
-        ("全日空", "NH"), ("日本航空", "JL"), ("大韩航空", "KE"),
-        ("新加坡航空", "SQ"), ("泰国航空", "TG"), ("国泰航空", "CX"),
-        ("阿联酋航空", "EK"), ("法国航空", "AF"),
-    ],
 }
 
 ROUTE_DURATIONS = {
-    ("北京", "东京"): (3.5, 4.5), ("上海", "东京"): (2.5, 3.5),
-    ("北京", "首尔"): (2.0, 3.0), ("上海", "首尔"): (1.5, 2.5),
-    ("北京", "曼谷"): (4.5, 6.0), ("上海", "曼谷"): (4.0, 5.5),
-    ("北京", "巴黎"): (10.0, 13.0), ("上海", "巴黎"): (11.0, 14.0),
-    ("北京", "大阪"): (3.0, 4.0), ("上海", "大阪"): (2.0, 3.0),
-    ("北京", "清迈"): (5.0, 7.0), ("上海", "清迈"): (4.5, 6.5),
+    ("北京", "杭州"): (3.5, 4.5), ("上海", "杭州"): (2.5, 3.5),
+    ("北京", "北京"): (2.0, 3.0), ("上海", "北京"): (1.5, 2.5),
+    ("北京", "三亚"): (4.5, 6.0), ("上海", "三亚"): (4.0, 5.5),
+    ("北京", "上海"): (10.0, 13.0), ("上海", "上海"): (11.0, 14.0),
+    ("北京", "西安"): (3.0, 4.0), ("上海", "西安"): (2.0, 3.0),
+    ("北京", "南京"): (5.0, 7.0), ("上海", "南京"): (4.5, 6.5),
 }
 
 
@@ -46,10 +41,10 @@ def search_flights(
     """搜索航班（Mock 实现）。"""
     key = (departure_city, arrival_city)
     rev_key = (arrival_city, departure_city)
-    dur_range = ROUTE_DURATIONS.get(key) or ROUTE_DURATIONS.get(rev_key) or (3.0, 8.0)
+    dur_range = ROUTE_DURATIONS.get(key) or ROUTE_DURATIONS.get(rev_key) or (1.5, 3.5)
 
-    is_international = arrival_city in ("东京", "首尔", "曼谷", "巴黎", "大阪", "清迈")
-    airline_pool = AIRLINES["国际"] if is_international else AIRLINES["国内"]
+    is_international = False  # 国内演示航班
+    airline_pool = AIRLINES["国内"]
 
     cabin_multiplier = {"economy": 1.0, "business": 2.5, "first": 5.0}
     multiplier = cabin_multiplier.get(cabin_class, 1.0)

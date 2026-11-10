@@ -84,9 +84,9 @@ class FlightAgent(BaseAgent):
             f"去程日期 {pref.start_date}，返程日期 {pref.end_date}。\n"
             "严格输出如下 JSON（无多余字段）：\n"
             '{"outbound_flights":[{"airline":"中国国航","flight_no":"CA123","departure_city":"北京",'
-            '"arrival_city":"东京","departure_time":"2026-05-01T08:00","arrival_time":"2026-05-01T11:00",'
+            '"arrival_city":"杭州","departure_time":"2026-05-01T08:00","arrival_time":"2026-05-01T11:00",'
             '"price":1500,"duration_hours":3.0,"stops":0,"cabin_class":"economy"}],'
-            '"return_flights":[{"airline":"中国国航","flight_no":"CA456","departure_city":"东京",'
+            '"return_flights":[{"airline":"中国国航","flight_no":"CA456","departure_city":"杭州",'
             '"arrival_city":"北京","departure_time":"2026-05-05T18:00","arrival_time":"2026-05-05T21:00",'
             '"price":1400,"duration_hours":3.5,"stops":0,"cabin_class":"economy"}]}'
         )

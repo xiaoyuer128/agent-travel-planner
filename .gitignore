@@ -79,3 +79,14 @@ docs/
 # Node
 node_modules/
 dist/
+*.tsbuildinfo
+frontend/vite.config.js
+frontend/vite.config.d.ts
+*.sqlite3-shm
+*.sqlite3-wal
+
+# Local verification artifacts
+.coverage*
+.pytest_cache/
+review_reports/
+htmlcov/

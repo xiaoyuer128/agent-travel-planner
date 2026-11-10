@@ -4,11 +4,11 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   plugins: [vue()],
   server: {
-    port: 5173,
+    port: 5174,
     proxy: {
-      // 开发环境把 /api 转发到 FastAPI 后端，避免跨域
+      // 本地后端使用18000，避开当前Windows环境不可绑定的8000端口。
       "/api": {
-        target: "http://localhost:8000",
+        target: "http://127.0.0.1:18000",
         changeOrigin: true,
       },
     },

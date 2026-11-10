@@ -34,64 +34,8 @@ class KnowledgeDoc:
 
 # ── Mock 知识源: 目的地攻略 / 景点资料 ──────────────────────
 # 生产环境中这些文档通常来自数据库 / 爬虫 / 内容平台。
-KB_DOCUMENTS: list[KnowledgeDoc] = [
-    KnowledgeDoc(
-        id="tokyo-1",
-        city="东京",
-        title="东京景点攻略",
-        content="浅草寺是东京最古老的寺庙，雷门与仲见世商店街值得一逛；涩谷十字路口是世界最繁忙路口，"
-        "晚上可去新宿歌舞伎町感受夜生活；明治神宫适合清晨散步，门票免费。",
-    ),
-    KnowledgeDoc(
-        id="tokyo-2",
-        city="东京",
-        title="东京美食推荐",
-        content="筑地市场适合海鲜早餐，寿司与海胆饭是招牌；居酒屋体验可品尝烧鸟和清酒；"
-        "秋叶原动漫街上能找到主题咖啡店。预算方面，东京整体消费偏高，属高价目的地。",
-    ),
-    KnowledgeDoc(
-        id="bangkok-1",
-        city="曼谷",
-        title="曼谷景点攻略",
-        content="大皇宫与卧佛寺是曼谷必去的文化地标，注意着装要求；水上市场适合体验当地水上贸易；"
-        "湄南河夜游可欣赏河畔夜景。曼谷消费低廉，是性价比极高的目的地。",
-    ),
-    KnowledgeDoc(
-        id="bangkok-2",
-        city="曼谷",
-        title="曼谷美食推荐",
-        content="考山路是背包客聚集地，小吃物美价廉；路边摊美食之旅可品尝冬阴功、芒果糯米饭；"
-        "泰式按摩价格亲民，适合行程中穿插放松。",
-    ),
-    KnowledgeDoc(
-        id="paris-1",
-        city="巴黎",
-        title="巴黎景点攻略",
-        content="埃菲尔铁塔与卢浮宫是巴黎标志，卢浮宫周二闭馆需提前预约；香榭丽舍大街适合购物，"
-        "蒙马特高地可俯瞰巴黎全景。巴黎为高价目的地，安全评分中等。",
-    ),
-    KnowledgeDoc(
-        id="chiangmai-1",
-        city="清迈",
-        title="清迈景点攻略",
-        content="清迈是兰纳文化古城，双龙寺坐落于素贴山可俯瞰全城；古城内寺庙密集适合徒步；"
-        "周末夜市与夜间动物园是亲子与休闲的好选择。消费低廉，节奏宁静。",
-    ),
-    KnowledgeDoc(
-        id="seoul-1",
-        city="首尔",
-        title="首尔景点攻略",
-        content="景福宫与北村韩屋村展现传统韩国；明洞是购物与美妆天堂；南山塔适合看夜景，"
-        "挂同心锁是经典体验。首尔消费中等，无需签证可免签入境。",
-    ),
-    KnowledgeDoc(
-        id="osaka-1",
-        city="大阪",
-        title="大阪景点攻略",
-        content="大阪城是地标性城堡，樱花季尤其壮观；道顿堀是美食与招牌文化的代表，可品尝章鱼烧；"
-        "环球影城适合家庭游；黑门市场是海鲜爱好者的天堂。大阪被誉为日本的厨房。",
-    ),
-]
+from domestic import GUIDES
+KB_DOCUMENTS = [KnowledgeDoc(id=d["id"], city=d["city"], title=d["title"], content=d["text"]) for d in GUIDES]
 
 
 KNOWN_CITIES: frozenset[str] = frozenset(doc.city for doc in KB_DOCUMENTS)

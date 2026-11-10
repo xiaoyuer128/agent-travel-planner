@@ -23,15 +23,15 @@ from rag.vector_store import InMemoryVectorStore, SearchHit
 
 def test_mock_embedder_is_deterministic():
     emb = MockEmbedder()
-    v1 = emb.embed("东京 浅草寺 美食")
-    v2 = emb.embed("东京 浅草寺 美食")
+    v1 = emb.embed("杭州 西湖 美食")
+    v2 = emb.embed("杭州 西湖 美食")
     assert len(v1) == MockEmbedder.dim
     assert v1 == v2
 
 
 def test_mock_embedder_normalized():
     emb = MockEmbedder()
-    vec = emb.embed("东京旅游攻略")
+    vec = emb.embed("杭州旅游攻略")
     norm = sum(x * x for x in vec) ** 0.5
     assert abs(norm - 1.0) < 1e-6
 
@@ -44,22 +44,22 @@ def test_inmemory_store_search_topk():
     store = InMemoryVectorStore()
     store.add(
         ids=["a", "b"],
-        vectors=emb.embed_many(["东京浅草寺攻略", "曼谷水上市场攻略"]),
-        texts=["东京的浅草寺", "曼谷的水上市场"],
+        vectors=emb.embed_many(["杭州西湖攻略", "三亚水上市场攻略"]),
+        texts=["杭州的西湖", "三亚的水上市场"],
     )
-    hits = store.search(emb.embed("东京 浅草寺"), top_k=1)
+    hits = store.search(emb.embed("杭州 西湖"), top_k=1)
     assert len(hits) == 1
     assert hits[0].id == "a"
-    assert "浅草寺" in hits[0].text
+    assert "西湖" in hits[0].text
 
 
 # ━━━━━━ RAG 检索门面 ━━━━━━
 
 
 def test_rag_search_returns_relevant_hits():
-    hits = rag_search("东京 浅草寺 美食")
+    hits = rag_search("杭州 西湖 美食")
     assert hits
-    assert any("浅草寺" in h or "东京" in h for h in hits)
+    assert any("西湖" in h or "杭州" in h for h in hits)
 
 
 def test_rag_retriever_singleton():

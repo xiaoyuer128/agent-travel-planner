@@ -8,6 +8,8 @@ python-dotenv>=1.0.0
 pytest>=8.0.0
 pytest-asyncio>=0.23.0
 loguru>=0.7.0
+langgraph>=1.0,<2
+Pillow>=11.0
 
 # ── 可选依赖（RAG 真实组件，默认 Mock 模式无需安装）──
 # 向量化模型 BGE-M3（RAG_EMBEDDING=bge-m3 时启用）

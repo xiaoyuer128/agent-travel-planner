@@ -28,68 +28,7 @@ from .base_agent import BaseAgent
 from llm_client import chat_json
 from rag import has_guide, rag_search
 
-MOCK_DESTINATIONS: list[dict] = [
-    {
-        "city": "东京",
-        "country": "日本",
-        "description": "传统与现代的完美融合，美食天堂",
-        "best_season": "spring,autumn",
-        "visa_required": True,
-        "safety_score": 9.5,
-        "cost_level": "high",
-        "highlights": ["浅草寺", "涩谷十字路口", "筑地市场", "东京塔"],
-    },
-    {
-        "city": "曼谷",
-        "country": "泰国",
-        "description": "热带风情，物美价廉的旅游胜地",
-        "best_season": "winter",
-        "visa_required": False,
-        "safety_score": 7.5,
-        "cost_level": "low",
-        "highlights": ["大皇宫", "卧佛寺", "考山路", "暹罗广场"],
-    },
-    {
-        "city": "巴黎",
-        "country": "法国",
-        "description": "浪漫之都，艺术与美食的殿堂",
-        "best_season": "spring,summer",
-        "visa_required": True,
-        "safety_score": 8.0,
-        "cost_level": "high",
-        "highlights": ["埃菲尔铁塔", "卢浮宫", "香榭丽舍大街", "蒙马特高地"],
-    },
-    {
-        "city": "清迈",
-        "country": "泰国",
-        "description": "宁静的兰纳古城，适合文化与休闲",
-        "best_season": "winter",
-        "visa_required": False,
-        "safety_score": 8.5,
-        "cost_level": "low",
-        "highlights": ["双龙寺", "古城", "夜间动物园", "周末夜市"],
-    },
-    {
-        "city": "首尔",
-        "country": "韩国",
-        "description": "潮流时尚与历史文化交汇",
-        "best_season": "spring,autumn",
-        "visa_required": False,
-        "safety_score": 9.0,
-        "cost_level": "medium",
-        "highlights": ["景福宫", "明洞", "北村韩屋村", "南山塔"],
-    },
-    {
-        "city": "大阪",
-        "country": "日本",
-        "description": "日本的厨房，环球影城所在地",
-        "best_season": "spring,autumn",
-        "visa_required": True,
-        "safety_score": 9.5,
-        "cost_level": "medium",
-        "highlights": ["大阪城", "道顿堀", "环球影城", "黑门市场"],
-    },
-]
+MOCK_DESTINATIONS: list[dict] = [{'city': '杭州', 'country': '中国', 'description': '杭州国内旅行示例', 'best_season': 'spring,autumn', 'visa_required': False, 'safety_score': 8.0, 'cost_level': 'medium', 'highlights': ['西湖', '灵隐飞来峰']}, {'city': '南京', 'country': '中国', 'description': '南京国内旅行示例', 'best_season': 'spring,autumn', 'visa_required': False, 'safety_score': 8.0, 'cost_level': 'medium', 'highlights': ['栖霞山', '夫子庙秦淮风光带']}, {'city': '北京', 'country': '中国', 'description': '北京国内旅行示例', 'best_season': 'spring,autumn', 'visa_required': False, 'safety_score': 8.0, 'cost_level': 'medium', 'highlights': ['颐和园', '香山公园']}, {'city': '西安', 'country': '中国', 'description': '西安国内旅行示例', 'best_season': 'spring,autumn', 'visa_required': False, 'safety_score': 8.0, 'cost_level': 'medium', 'highlights': ['大雁塔', '西安城墙']}, {'city': '成都', 'country': '中国', 'description': '成都国内旅行示例', 'best_season': 'spring,autumn', 'visa_required': False, 'safety_score': 8.0, 'cost_level': 'medium', 'highlights': ['人民公园', '宽窄巷子']}, {'city': '重庆', 'country': '中国', 'description': '重庆国内旅行示例', 'best_season': 'spring,autumn', 'visa_required': False, 'safety_score': 8.0, 'cost_level': 'medium', 'highlights': ['洪崖洞', '解放碑']}, {'city': '上海', 'country': '中国', 'description': '上海国内旅行示例', 'best_season': 'spring,autumn', 'visa_required': False, 'safety_score': 8.0, 'cost_level': 'medium', 'highlights': ['外滩', '豫园']}, {'city': '三亚', 'country': '中国', 'description': '三亚国内旅行示例', 'best_season': 'winter', 'visa_required': False, 'safety_score': 8.0, 'cost_level': 'medium', 'highlights': ['亚龙湾', '鹿回头风景区']}]
 
 
 class DestinationAgent(BaseAgent):
@@ -207,9 +146,9 @@ class DestinationAgent(BaseAgent):
         prompt = (
             f"预算 ¥{pref.budget:.0f}，出发城市 {pref.departure_city}，出发日期 {pref.start_date}，"
             f"旅行风格 {pref.travel_style.value}，兴趣 {pref.interests or ['美食']}。\n"
-            "请推荐 3 个目的地，严格输出如下 JSON（无多余字段）：\n"
-            '{"destinations":[{"city":"东京","country":"日本","description":"...","best_season":"spring,autumn",'
-            '"visa_required":true,"safety_score":9.5,"cost_level":"high","highlights":["浅草寺","涩谷"]}],'
+            "请仅推荐中国境内的 3 个目的地，严格输出如下 JSON（无多余字段）：\n"
+            '{"destinations":[{"city":"杭州","country":"中国","description":"...","best_season":"spring,autumn",'
+            '"visa_required":false,"safety_score":9.5,"cost_level":"high","highlights":["西湖","灵隐飞来峰"]}],'
             '"reasoning":"推荐理由"}'
         )
         data = await chat_json([
@@ -241,7 +180,7 @@ class DestinationAgent(BaseAgent):
     def _score_destination(dest: Destination, budget: float, style: str, start_date: str) -> float:
         score = 0.0
 
-        cost_budget_map = {"low": 8000, "medium": 15000, "high": 25000}
+        cost_budget_map = {"low": 2500, "medium": 5000, "high": 10000}
         est_cost = cost_budget_map.get(dest.cost_level, 15000)
         if budget >= est_cost:
             score += 30

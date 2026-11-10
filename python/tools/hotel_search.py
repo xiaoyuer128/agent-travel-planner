@@ -12,32 +12,12 @@ import random
 from models.schemas import Hotel
 
 
-CITY_HOTEL_DATA: dict[str, list[dict]] = {
-    "东京": [
-        {"name": "东京帝国酒店", "star": 5.0, "base_price": 1500, "amenities": ["WiFi", "温泉", "米其林餐厅", "管家服务"]},
-        {"name": "新宿华盛顿酒店", "star": 4.0, "base_price": 650, "amenities": ["WiFi", "早餐", "健身房"]},
-        {"name": "东京胶囊旅馆", "star": 2.0, "base_price": 120, "amenities": ["WiFi", "公共浴室"]},
-        {"name": "涩谷精品酒店", "star": 4.5, "base_price": 900, "amenities": ["WiFi", "酒吧", "屋顶花园"]},
-        {"name": "浅草背包客旅馆", "star": 2.5, "base_price": 180, "amenities": ["WiFi", "公共厨房", "洗衣房"]},
-    ],
-    "曼谷": [
-        {"name": "曼谷文华东方酒店", "star": 5.0, "base_price": 800, "amenities": ["WiFi", "SPA", "泳池", "河景"]},
-        {"name": "考山路精品旅舍", "star": 3.0, "base_price": 100, "amenities": ["WiFi", "酒吧", "公共区域"]},
-        {"name": "素坤逸万豪酒店", "star": 4.5, "base_price": 500, "amenities": ["WiFi", "泳池", "健身房", "早餐"]},
-        {"name": "暹罗经济酒店", "star": 3.0, "base_price": 150, "amenities": ["WiFi", "空调"]},
-    ],
-    "default": [
-        {"name": "豪华五星酒店", "star": 5.0, "base_price": 1000, "amenities": ["WiFi", "SPA", "泳池", "管家"]},
-        {"name": "舒适四星酒店", "star": 4.0, "base_price": 500, "amenities": ["WiFi", "早餐", "健身房"]},
-        {"name": "经济连锁酒店", "star": 3.0, "base_price": 200, "amenities": ["WiFi", "空调"]},
-        {"name": "青年旅舍", "star": 2.0, "base_price": 80, "amenities": ["WiFi", "公共厨房"]},
-    ],
-}
+CITY_HOTEL_DATA: dict[str, list[dict]] = {'杭州': [{'name': '杭州舒适型示例酒店', 'star': 3.0, 'base_price': 220, 'amenities': ['WiFi', '早餐']}, {'name': '杭州经济型示例酒店', 'star': 2.0, 'base_price': 120, 'amenities': ['WiFi']}], '南京': [{'name': '南京舒适型示例酒店', 'star': 3.0, 'base_price': 220, 'amenities': ['WiFi', '早餐']}, {'name': '南京经济型示例酒店', 'star': 2.0, 'base_price': 120, 'amenities': ['WiFi']}], '北京': [{'name': '北京舒适型示例酒店', 'star': 3.0, 'base_price': 220, 'amenities': ['WiFi', '早餐']}, {'name': '北京经济型示例酒店', 'star': 2.0, 'base_price': 120, 'amenities': ['WiFi']}], '西安': [{'name': '西安舒适型示例酒店', 'star': 3.0, 'base_price': 220, 'amenities': ['WiFi', '早餐']}, {'name': '西安经济型示例酒店', 'star': 2.0, 'base_price': 120, 'amenities': ['WiFi']}], '成都': [{'name': '成都舒适型示例酒店', 'star': 3.0, 'base_price': 220, 'amenities': ['WiFi', '早餐']}, {'name': '成都经济型示例酒店', 'star': 2.0, 'base_price': 120, 'amenities': ['WiFi']}], '重庆': [{'name': '重庆舒适型示例酒店', 'star': 3.0, 'base_price': 220, 'amenities': ['WiFi', '早餐']}, {'name': '重庆经济型示例酒店', 'star': 2.0, 'base_price': 120, 'amenities': ['WiFi']}], '上海': [{'name': '上海舒适型示例酒店', 'star': 3.0, 'base_price': 220, 'amenities': ['WiFi', '早餐']}, {'name': '上海经济型示例酒店', 'star': 2.0, 'base_price': 120, 'amenities': ['WiFi']}], '三亚': [{'name': '三亚舒适型示例酒店', 'star': 3.0, 'base_price': 220, 'amenities': ['WiFi', '早餐']}, {'name': '三亚经济型示例酒店', 'star': 2.0, 'base_price': 120, 'amenities': ['WiFi']}], 'default': [{'name': '杭州舒适型示例酒店', 'star': 3.0, 'base_price': 220, 'amenities': ['WiFi', '早餐']}, {'name': '杭州经济型示例酒店', 'star': 2.0, 'base_price': 120, 'amenities': ['WiFi']}]}
 
 
 def search_hotels(city: str, check_in: str, check_out: str, style: str = "comfort") -> list[Hotel]:
     """搜索酒店（Mock 实现）。"""
-    templates = CITY_HOTEL_DATA.get(city, CITY_HOTEL_DATA["default"])
+    templates = CITY_HOTEL_DATA.get(city, [{**h, "name": city + "示例酒店"} for h in CITY_HOTEL_DATA["default"]])
     style_mult = {"budget": 0.7, "comfort": 1.0, "luxury": 1.5,
                   "adventure": 0.6, "cultural": 0.9, "relaxation": 1.2}
     mult = style_mult.get(style, 1.0)

@@ -8,13 +8,21 @@ FastAPI 后端 —— 提供 REST API 接口。
 
 from __future__ import annotations
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from config.settings import settings
 from models.schemas import TravelPlanState, TravelStyle, UserPreferences
 from orchestrator.pipeline import TravelPlanningPipeline
+from chat.api import router as chat_router
+from api.discover import router as discover_router
+from community.auth import router as account_router
+from community.content import router as content_router
+from community.journeys import router as journeys_router
+from api.knowledge import router as knowledge_router
+import os
 
 app = FastAPI(
     title="多Agent智能旅游行程规划系统",
@@ -24,10 +32,28 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=os.getenv('ALLOWED_ORIGINS','http://127.0.0.1:5174,http://localhost:5174').split(','),
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.include_router(chat_router)
+app.include_router(discover_router)
+app.include_router(account_router)
+app.include_router(content_router)
+app.include_router(journeys_router)
+app.include_router(knowledge_router)
+
+@app.middleware('http')
+async def request_safety(request:Request,call_next):
+    origin=request.headers.get('origin')
+    allowed=os.getenv('ALLOWED_ORIGINS','http://127.0.0.1:5174,http://localhost:5174').split(',')
+    if request.method not in {'GET','HEAD','OPTIONS'} and origin and origin not in allowed:
+        return JSONResponse({'detail':'请求来源不受信任'},status_code=403)
+    response=await call_next(request)
+    response.headers['X-Content-Type-Options']='nosniff'
+    if '/api/media/' not in request.url.path:response.headers['Cache-Control']='no-store'
+    return response
 
 
 class PlanRequest(BaseModel):

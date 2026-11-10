@@ -23,20 +23,7 @@ class WeatherInfo:
     suggestion: str
 
 
-CITY_WEATHER_PROFILES: dict[str, dict[str, dict]] = {
-    "东京": {
-        "spring": {"high": (15, 22), "low": (8, 14), "conditions": ["晴", "多云", "小雨"], "humidity": (50, 70), "rain": 30},
-        "summer": {"high": (28, 35), "low": (22, 26), "conditions": ["晴", "多云", "雷阵雨"], "humidity": (70, 90), "rain": 50},
-        "autumn": {"high": (18, 25), "low": (10, 18), "conditions": ["晴", "多云"], "humidity": (40, 60), "rain": 20},
-        "winter": {"high": (5, 12), "low": (-2, 5), "conditions": ["晴", "多云", "阴"], "humidity": (30, 50), "rain": 10},
-    },
-    "曼谷": {
-        "spring": {"high": (33, 38), "low": (25, 28), "conditions": ["晴", "多云", "雷阵雨"], "humidity": (60, 80), "rain": 40},
-        "summer": {"high": (32, 36), "low": (25, 28), "conditions": ["雷阵雨", "多云", "大雨"], "humidity": (70, 90), "rain": 70},
-        "autumn": {"high": (30, 34), "low": (24, 27), "conditions": ["多云", "雷阵雨"], "humidity": (65, 85), "rain": 60},
-        "winter": {"high": (30, 34), "low": (20, 24), "conditions": ["晴", "多云"], "humidity": (50, 65), "rain": 10},
-    },
-}
+CITY_WEATHER_PROFILES: dict[str, dict[str, dict]] = {}  # 国内演示使用下方季节模板，非真实天气
 
 DEFAULT_PROFILE = {
     "spring": {"high": (15, 25), "low": (8, 15), "conditions": ["晴", "多云"], "humidity": (40, 60), "rain": 25},

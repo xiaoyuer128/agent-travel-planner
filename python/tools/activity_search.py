@@ -12,38 +12,7 @@ import random
 from models.schemas import Activity
 
 
-CITY_ACTIVITIES: dict[str, list[dict]] = {
-    "东京": [
-        {"name": "浅草寺", "cat": "sightseeing", "price": 0, "hours": 2.0, "slot": "morning"},
-        {"name": "筑地市场海鲜早餐", "cat": "food", "price": 200, "hours": 1.5, "slot": "morning"},
-        {"name": "明治神宫", "cat": "sightseeing", "price": 0, "hours": 1.5, "slot": "morning"},
-        {"name": "涩谷十字路口", "cat": "sightseeing", "price": 0, "hours": 0.5, "slot": "afternoon"},
-        {"name": "teamLab数字艺术馆", "cat": "experience", "price": 250, "hours": 2.5, "slot": "afternoon"},
-        {"name": "东京塔", "cat": "sightseeing", "price": 80, "hours": 1.5, "slot": "afternoon"},
-        {"name": "新宿歌舞伎町", "cat": "experience", "price": 0, "hours": 2.0, "slot": "evening"},
-        {"name": "居酒屋体验", "cat": "food", "price": 300, "hours": 2.0, "slot": "evening"},
-        {"name": "秋叶原动漫街", "cat": "experience", "price": 0, "hours": 2.0, "slot": "afternoon"},
-        {"name": "和服体验", "cat": "experience", "price": 400, "hours": 3.0, "slot": "morning"},
-    ],
-    "曼谷": [
-        {"name": "大皇宫", "cat": "sightseeing", "price": 35, "hours": 2.5, "slot": "morning"},
-        {"name": "卧佛寺", "cat": "sightseeing", "price": 15, "hours": 1.5, "slot": "morning"},
-        {"name": "水上市场", "cat": "experience", "price": 80, "hours": 3.0, "slot": "morning"},
-        {"name": "暹罗广场购物", "cat": "experience", "price": 0, "hours": 2.0, "slot": "afternoon"},
-        {"name": "泰式按摩", "cat": "experience", "price": 120, "hours": 2.0, "slot": "afternoon"},
-        {"name": "考山路小吃", "cat": "food", "price": 60, "hours": 2.0, "slot": "evening"},
-        {"name": "湄南河夜游", "cat": "experience", "price": 200, "hours": 2.0, "slot": "evening"},
-        {"name": "路边摊美食之旅", "cat": "food", "price": 100, "hours": 2.0, "slot": "evening"},
-    ],
-    "default": [
-        {"name": "城市地标", "cat": "sightseeing", "price": 0, "hours": 2.0, "slot": "morning"},
-        {"name": "当地博物馆", "cat": "sightseeing", "price": 80, "hours": 2.5, "slot": "morning"},
-        {"name": "特色午餐", "cat": "food", "price": 150, "hours": 1.5, "slot": "afternoon"},
-        {"name": "老城区漫步", "cat": "sightseeing", "price": 0, "hours": 2.0, "slot": "afternoon"},
-        {"name": "日落观景点", "cat": "sightseeing", "price": 50, "hours": 1.0, "slot": "evening"},
-        {"name": "当地夜市", "cat": "food", "price": 100, "hours": 2.0, "slot": "evening"},
-    ],
-}
+CITY_ACTIVITIES: dict[str, list[dict]] = {'杭州': [{'name': '西湖', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'morning'}, {'name': '灵隐飞来峰', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'afternoon'}], '南京': [{'name': '栖霞山', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'morning'}, {'name': '夫子庙秦淮风光带', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'afternoon'}], '北京': [{'name': '颐和园', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'morning'}, {'name': '香山公园', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'afternoon'}], '西安': [{'name': '大雁塔', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'morning'}, {'name': '西安城墙', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'afternoon'}], '成都': [{'name': '人民公园', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'morning'}, {'name': '宽窄巷子', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'afternoon'}], '重庆': [{'name': '洪崖洞', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'morning'}, {'name': '解放碑', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'afternoon'}], '上海': [{'name': '外滩', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'morning'}, {'name': '豫园', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'afternoon'}], '三亚': [{'name': '亚龙湾', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'morning'}, {'name': '鹿回头风景区', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'afternoon'}], 'default': [{'name': '当地街区自由探索（示例）', 'cat': 'sightseeing', 'price': 0, 'hours': 2.0, 'slot': 'morning'}]}
 
 
 def search_activities(city: str, interests: list[str] | None = None) -> list[Activity]:

@@ -15,7 +15,7 @@ const STYLES: { value: TravelStyle; label: string }[] = [
 ];
 
 const INTERESTS = ["美食", "历史", "艺术", "自然", "购物", "摄影", "运动"];
-const DESTINATIONS = ["东京", "曼谷", "巴黎", "清迈", "首尔", "大阪"];
+const DESTINATIONS = ["杭州", "三亚", "上海", "南京", "北京", "西安"];
 
 function dateStr(d: Date): string {
   const y = d.getFullYear();
