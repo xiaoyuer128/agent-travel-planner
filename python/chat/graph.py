@@ -113,15 +113,22 @@ def build_graph(extractor=None):
         plan, reply = build_plan(s["preferences"], s["sources"], previous_plan, s["action"], changes)
         if s.get('place_context'):plan['place_context']=s['place_context']
         if isinstance(extractor, DeepSeekAdapter):
+            target_day = None
             if 'days' in plan['changed_sections']:
-                original = deepcopy(plan['days'])
                 plan = extractor.enrich(plan,s['message'])
                 match = re.search(r'第([一二三四五六七八九十两]+|\d+)天',s['message'])
-                if match and s['session'].get('plan') and not set(s['changed']).intersection({'destination','days','start_date'}):
+                if match and previous_plan and not set(changes).intersection({'departure_city','destination','days','start_date','num_travelers'}):
                     value=match[1]
-                    target=number(value)
-                    plan['days']=[d if d['day']==target else original[i] for i,d in enumerate(plan['days'])]
-                reply = "已由 DeepSeek 生成行程，航班、酒店与费用仍为示例。"
+                    target_day=number(value)
+                    if not 1 <= target_day <= len(plan['days']):
+                        raise ModelUnavailable('指定日期超出当前行程，原方案未更改。')
+                    plan['days']=[d if d['day']==target_day else deepcopy(previous_plan['days'][i]) for i,d in enumerate(plan['days'])]
+            if 'flights' in plan['changed_sections']:
+                plan = extractor.estimate(plan)
+            elif 'days' in plan['changed_sections']:
+                plan = extractor.estimate(plan, scope='daily', target_day=target_day)
+            reply = ('已更新行程与AI费用估算，实际价格和可用性请以预订平台为准。'
+                     if plan.get('price_metadata') else '已更新原方案，费用沿用原有示例预算。')
             plan['mode'] = 'deepseek'
         return {"plan": plan, "reply": reply, "trace": s["trace"] + ["plan"]}
 

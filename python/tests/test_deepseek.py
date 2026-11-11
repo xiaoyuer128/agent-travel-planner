@@ -9,6 +9,7 @@ def test_real_graph_and_hotel_invariants(tmp_path,monkeypatch):
     monkeypatch.setenv('CHAT_DB_PATH',str(tmp_path/'chat.sqlite3'))
     monkeypatch.setattr(settings,'LLM_PROVIDER','deepseek')
     def request(self,system,context):
+        if 'estimate_scope' in context: return {}
         if 'message' in context:
             if '便宜' in context['message']: return {'patch':{},'action':'hotel_cheaper'}
             return {'patch':{'departure_city':'重庆','destination':'杭州','budget':8000,'num_travelers':2,'days':3,'start_date':'2026-12-01'},'action':'auto'}

@@ -195,6 +195,7 @@ def test_model_second_day_edit_preserves_other_days(clients,monkeypatch):
     a,_,_=clients;s=plan(a);sid=s['id'];old=s['plan']['days']
     monkeypatch.setattr(settings,'LLM_PROVIDER','deepseek')
     def request(self,system,context):
+        if 'estimate_scope' in context:return {}
         if 'message' in context:return {'patch':{},'action':'activity'}
         return {'days':[{'day':i,'title':'修改后的路线','description':'调整后的安排','source_ids':[context['sources'][0]['id']]} for i in range(1,4)]}
     monkeypatch.setattr(DeepSeekAdapter,'request',request)

@@ -44,12 +44,26 @@ def calculate(plan):
     flight = sum(x["price_cents"] for x in plan["flights"]) * pref["num_travelers"]
     hotel = plan["hotel"]["price_cents"] * max(pref["days"]-1, 0) * rooms
     activity = sum(d["cost_per_person_cents"] for d in plan["days"]) * pref["num_travelers"]
+    daily_breakdown = {
+        key: sum(day.get('expense_estimate', {}).get(key, 0) for day in plan['days']) * pref['num_travelers']
+        for key in ('tickets_cents', 'meals_cents', 'local_transport_cents')
+    }
+    daily_breakdown['unclassified_daily_cents'] = sum(
+        day['cost_per_person_cents'] for day in plan['days'] if 'expense_estimate' not in day
+    ) * pref['num_travelers']
     total = flight + hotel + activity
     budget = int(Decimal(str(pref["budget"])) * 100)
     plan["cost"] = {"flight_cents": flight, "hotel_cents": hotel, "activity_cents": activity,
                     "total_cents": total, "budget_cents": budget, "within_budget": total <= budget,
-                    "remaining_cents": budget-total, "rooms": rooms, "nights": max(pref["days"]-1, 0)}
-    plan["warnings"] = ["全部航班、酒店与费用均为Mock示例，不可直接预订；攻略不是实时旅游资讯。"]
+                    "remaining_cents": budget-total, "rooms": rooms, "nights": max(pref["days"]-1, 0),
+                    **daily_breakdown}
+    metadata = plan.get('price_metadata')
+    if metadata:
+        plan['warnings'] = [metadata['notice']]
+        if metadata.get('fallback_fields'):
+            plan['warnings'].append(metadata['fallback_note'])
+    else:
+        plan["warnings"] = ["全部航班、酒店与费用均为Mock示例，不可直接预订；攻略不是实时旅游资讯。"]
     if not plan["sources"]:
         plan["warnings"].append("该城市暂无本地攻略：未伪造来源，仅提供通用安排。")
     if total > budget:
@@ -73,9 +87,10 @@ def build_plan(pref, sources, previous=None, action="auto", changed=()):
                 "changed_sections": ["flights", "hotel", "days", "sources"]}
     note = "已生成示例方案。"
     if action in {"hotel_cheaper", "hotel_better"}:
-        current = next(i for i, h in enumerate(HOTELS) if h["id"] == plan["hotel"]["id"])
-        target = max(0, current-1) if action == "hotel_cheaper" else min(len(HOTELS)-1, current+1)
-        plan["hotel"] = deepcopy(HOTELS[target])
+        options = plan.get('hotel_options') or HOTELS
+        current = next((i for i, h in enumerate(options) if h['id'] == plan['hotel']['id']), len(options)//2)
+        target = max(0, current-1) if action == "hotel_cheaper" else min(len(options)-1, current+1)
+        plan["hotel"] = deepcopy(options[target])
         plan["changed_sections"] = list(dict.fromkeys(plan["changed_sections"] + ["hotel", "cost"]))
         note = "酒店已替换，其余航班和行程保留。" if target != current else "已是当前候选的最低／最高档酒店，保留原方案。"
     if local and (action == "activity" or set(changed).intersection({'interests','pace','walking','needs','selected_spots','transport'})):
